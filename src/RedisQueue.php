@@ -259,7 +259,7 @@ class RedisQueue
 
         // 进程名称为空
 		if(empty($this->options['name'])){
-            $this->options['name'] = 'think-webworker';
+            $this->options['name'] = 'think-redisqueue';
         }
 
         // 构造新的运行时目录
