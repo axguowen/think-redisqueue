@@ -17,7 +17,7 @@
     "require": {
         "workerman/workerman": "^4.1",
         "topthink/framework": "^6.1 || ^8.0",
-        "axguowen/think-redisclient": "^1.0"
+        "axguowen/think-redisclient": "^1.1"
     },
     "autoload": {
         "psr-4": {
