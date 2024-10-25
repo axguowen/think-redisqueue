@@ -12,7 +12,7 @@
 namespace think;
 
 use think\App;
-use think\RedisClient;
+use think\facade\RedisClient;
 use think\redisclient\Builder;
 use think\console\Output;
 use think\console\Input;
