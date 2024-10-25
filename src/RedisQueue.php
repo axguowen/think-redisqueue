@@ -38,6 +38,8 @@ class RedisQueue
         'connection' => 'localhost',
         // 是否以守护进程启动
         'daemonize' => false,
+        // Redis键名存储有效期
+        'storage_expire' => 0,
         // 内容输出文件路径
         'stdout_file' => '',
         // pid文件路径
@@ -167,7 +169,7 @@ class RedisQueue
         // 获取当前进程对应的队列
         $queue = $this->queueList[$worker->id];
         // 实例化存储器
-        $this->storageBuilder = RedisClient::connect($this->options['connection'])->key($queue);
+        $this->storageBuilder = RedisClient::connect($this->options['connection'])->key(static::STORAGE_KEY, $queue);
         // 获取执行器
         $handler = $queue['handler'];
         // 如果是类名则指定方法
@@ -203,10 +205,10 @@ class RedisQueue
         // 如果是闭包
         if ($handler instanceof \Closure) {
             // 执行闭包
-            return $this->app->invokeFunction($handler);
+            return $this->app->invokeFunction($handler, [$queueData]);
         }
         // 执行类的方法
-        return $this->app->invokeMethod($handler);
+        return $this->app->invokeMethod($handler, [$queueData]);
     }
 
     /**
@@ -219,11 +221,18 @@ class RedisQueue
     public function send($queueId, array $data = [])
     {
         // 实例化存储器
-        $storageBuilder = RedisClient::connect($this->options['connection'])->key([
+        $storageBuilder = RedisClient::connect($this->options['connection'])->key(static::STORAGE_KEY, [
             'id' => $queueId,
         ]);
         // 将数据推送到队列
-        return $storageBuilder->lPush(json_encode($data, JSON_UNESCAPED_UNICODE));
+        $lPushResult = $storageBuilder->lPush(json_encode($data, JSON_UNESCAPED_UNICODE));
+        // 如果设置了有效期
+        if($this->options['storage_expire'] > 0){
+            // 设置有效期
+            $storageBuilder->expire($this->options['storage_expire']);
+        }
+        // 返回
+        return $lPushResult;
     }
 
     /**

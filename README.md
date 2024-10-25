@@ -25,6 +25,8 @@ return [
     'connection' => 'localhost',
     // 是否以守护进程启动
     'daemonize' => false,
+    // Redis键名存储有效期
+    'storage_expire' => 0,
     // 内容输出文件路径
     'stdout_file' => '',
     // pid文件路径
@@ -103,6 +105,18 @@ php think redisqueue stop
 ### 查看进程状态
 ~~~
 php think redisqueue status
+~~~
+
+### 向队列中发送数据
+~~~php
+use think\facade\RedisQueue;
+
+// 队列数据
+$queueData = ['name' => 'zhangsan'];
+// 向队列发送数据
+$result = \think\facade\RedisQueue::send(1, $queueData);
+// 输出结果
+echo $result;
 ~~~
 
 ## 注意

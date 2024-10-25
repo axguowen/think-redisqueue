@@ -16,6 +16,8 @@ return [
     'connection' => 'localhost',
     // 是否以守护进程启动
     'daemonize' => false,
+    // Redis键名存储有效期
+    'storage_expire' => 0,
     // 内容输出文件路径
     'stdout_file' => '',
     // pid文件路径
