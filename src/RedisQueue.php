@@ -177,7 +177,7 @@ class RedisQueue
             $handler = [$handler, 'handle'];
         }
         // 加入到定时器并返回
-        return Timer::add(1, [$this, 'consume'], [$handler]);
+        return Timer::add(0.001, [$this, 'consume'], [$handler]);
     }
 
     /**
