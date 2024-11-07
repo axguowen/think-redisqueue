@@ -193,14 +193,16 @@ class RedisQueue
         // 如果弹出的队列数据为空
         if(empty($queueDataPop) || !is_array($queueDataPop) || count($queueDataPop) < 2){
             // 返回
-            return $this->output->writeln('<error>没有可执行的数据</error>');
+            echo '没有可执行的数据' . "\n";
+            return;
         }
         // 解析json
         $queueData = json_decode($queueDataPop[1], true);
         // 如果解析队列数据失败
         if(!is_array($queueData)){
             // 返回
-            return $this->output->writeln('<error>队列数据解析失败</error>');
+            echo '队列数据解析失败' . "\n";
+            return;
         }
         // 如果是闭包
         if ($handler instanceof \Closure) {
